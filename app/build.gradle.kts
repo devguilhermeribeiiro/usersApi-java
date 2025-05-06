@@ -27,7 +27,6 @@ dependencies {
     implementation("org.slf4j:slf4j-simple:2.0.16")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
     implementation("org.postgresql:postgresql:42.7.5")
-    implementation("com.zaxxer:HikariCP:6.3.0")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
