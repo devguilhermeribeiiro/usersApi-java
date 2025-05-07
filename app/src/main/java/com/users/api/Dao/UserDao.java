@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import com.users.api.Dto.UserResponseDto;
@@ -15,6 +17,35 @@ public class UserDao implements DaoInterface {
 
     public UserDao(Connection conn) {
         this.conn = conn;
+    }
+
+    public List<UserResponseDto> getAll() throws SQLException {
+        List<UserResponseDto> usersResponseDtos = new ArrayList<>();
+
+        try (PreparedStatement query = conn.prepareStatement("SELECT * FROM users WHERE id = ?")) {
+            conn.setAutoCommit(false);
+
+            query.setObject(1, "id");
+
+            ResultSet rs = query.executeQuery();
+            conn.commit();
+
+            while (rs.next()) {
+                String uuid = rs.getString("id");
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+
+                usersResponseDtos.add(new UserResponseDto("Success", uuid, name, email));
+            }
+
+        } catch (SQLException e) {
+            e.getStackTrace();
+
+            System.err.print("Transaction is being rolled back");
+            conn.rollback();
+        }
+
+        return usersResponseDtos;
     }
 
     @Override
