@@ -11,7 +11,7 @@ public class Database {
         Connection conn = null;
 
         Properties connectionProps = new Properties();
-        connectionProps.setProperty("url", "jdbc:postgres://localhost:5432/usersApi");
+        connectionProps.setProperty("url", "jdbc:postgresql://localhost:5432/usersApi");
         connectionProps.setProperty("user", "usersApi");
         connectionProps.setProperty("password", "usersApi");
 
