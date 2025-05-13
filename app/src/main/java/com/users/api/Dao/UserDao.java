@@ -22,29 +22,31 @@ public class UserDao implements DaoInterface {
     public List<UserResponseDto> getAll() throws SQLException {
         List<UserResponseDto> usersResponseDtos = new ArrayList<>();
 
-        try (PreparedStatement query = conn.prepareStatement("SELECT * FROM users WHERE id = ?")) {
-            conn.setAutoCommit(false);
-
-            query.setObject(1, "id");
-
-            ResultSet rs = query.executeQuery();
-            conn.commit();
-
-            while (rs.next()) {
-                String uuid = rs.getString("id");
-                String name = rs.getString("name");
-                String email = rs.getString("email");
-
-                usersResponseDtos.add(new UserResponseDto("Success", uuid, name, email));
+        try (PreparedStatement query = conn.prepareStatement("SELECT * FROM users");
+             ResultSet resultSet = query.executeQuery();
+        )
+        {
+            if (!resultSet.next()) {
+                usersResponseDtos.add(new UserResponseDto("Success: No content", "", "", ""));
             }
 
+            do {
+                UserResponseDto users = new UserResponseDto(
+                        "success",
+                        resultSet.getString("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("email")
+                );
+
+                System.out.println("rs: next ");
+                usersResponseDtos.add(users);
+            } while (resultSet.next());
+
         } catch (SQLException e) {
-            e.getStackTrace();
-
-            System.err.print("Transaction is being rolled back");
-            conn.rollback();
+            System.err.print("SQL error: " + e.getMessage());
+            throw e;
         }
-
+        System.out.println(usersResponseDtos);
         return usersResponseDtos;
     }
 
@@ -53,7 +55,7 @@ public class UserDao implements DaoInterface {
         UserResponseDto userResponseDto = null;
 
         try (PreparedStatement query = conn
-                .prepareStatement("INSERT INTO users (id, name, email) VALUES (?, ?, ?)")) {
+                .prepareStatement("INSERT INTO users (id, name, email) VALUES (?, ?, ?) RETURNING *")) {
 
             conn.setAutoCommit(false);
 
@@ -71,7 +73,6 @@ public class UserDao implements DaoInterface {
 
                 userResponseDto = new UserResponseDto("Success", id, name, email);
             }
-
 
         } catch (SQLException e) {
             e.getStackTrace();
@@ -116,7 +117,7 @@ public class UserDao implements DaoInterface {
     @Override
     public UserResponseDto update(UUID id, String name, String email) throws SQLException {
         UserResponseDto userResponseDto = null;
-        try (PreparedStatement query = conn.prepareStatement("UPDATE users SET name = ?, email = ? WHERE id = ?")) {
+        try (PreparedStatement query = conn.prepareStatement("UPDATE users SET name = ?, email = ? WHERE id = ? RETURNING *")) {
             conn.setAutoCommit(false);
 
             query.setString(1, name);
