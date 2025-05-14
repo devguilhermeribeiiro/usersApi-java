@@ -27,7 +27,7 @@ public class UserDao implements DaoInterface {
         )
         {
             if (!resultSet.next()) {
-                usersResponseDtos.add(new UserResponseDto("Success: No content", "", "", ""));
+                return  usersResponseDtos;
             }
 
             do {
@@ -145,10 +145,10 @@ public class UserDao implements DaoInterface {
     }
 
     @Override
-    public UserResponseDto delete(UUID id) throws Exception {
+    public UserResponseDto delete(UUID id) throws SQLException {
         UserResponseDto userResponseDto = null;
 
-        try (PreparedStatement query = conn.prepareStatement("DELETE FROM users WHERE id = ?")) {
+        try (PreparedStatement query = conn.prepareStatement("DELETE FROM users WHERE id = ? RETURNING *")) {
             conn.setAutoCommit(false);
 
             query.setObject(1, id);
