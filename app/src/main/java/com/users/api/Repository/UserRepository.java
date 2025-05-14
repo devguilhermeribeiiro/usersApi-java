@@ -1,6 +1,7 @@
 package com.users.api.Repository;
 
 import com.users.api.Dao.UserDao;
+import com.users.api.Dto.UserRequestDto;
 import com.users.api.Dto.UserResponseDto;
 import com.users.api.Entity.User;
 import com.users.api.Interfaces.DaoInterface;
@@ -36,7 +37,7 @@ public class UserRepository implements RepositoryInterface {
     }
 
     @Override
-    public UserResponseDto destroy(UUID id) throws Exception {
+    public UserResponseDto destroy(UUID id) throws SQLException {
         return userDao.delete(id);
     }
 }
