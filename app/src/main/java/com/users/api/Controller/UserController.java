@@ -26,11 +26,11 @@ public class UserController {
             UserController.findUser(ctx, ctx.pathParam("uuid"));
         });
 
-        app.post("/users/{uuid}", ctx -> {
+        app.put("/users/{uuid}", ctx -> {
             UserController.updateUser(ctx, ctx.pathParam("uuid"), ctx.bodyAsClass(UserRequestDto.class));
         });
 
-        app.post("/users/{uuid}/delete", ctx -> UserController.deleteUser(ctx, ctx.pathParam("uuid")));
+        app.delete("/users/{uuid}", ctx -> UserController.deleteUser(ctx, ctx.pathParam("uuid")));
     }
 
     private static void getUsers(Context ctx) throws SQLException {
