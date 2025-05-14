@@ -2,10 +2,7 @@ package com.users.api.Controller;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
-import com.users.api.Config.DependencyContainer;
 import com.users.api.Dto.UserRequestDto;
 import com.users.api.Dto.UserResponseDto;
 import com.users.api.Service.UserService;
@@ -40,8 +37,7 @@ public class UserController {
         List<UserResponseDto> responseDto = userService.getUsers();
 
         if (!responseDto.isEmpty()) ctx.status(200).json(responseDto);
-
-        ctx.status(204);
+        else ctx.status(204);
     }
 
     private static void createUser(Context ctx, UserRequestDto dto) throws SQLException {
