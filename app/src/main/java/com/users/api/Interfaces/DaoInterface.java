@@ -14,7 +14,7 @@ public interface DaoInterface {
 
     UserResponseDto update(UUID id, String name, String email) throws SQLException;
 
-    UserResponseDto delete(UUID id) throws Exception;
+    UserResponseDto delete(UUID id) throws SQLException;
 
     List<UserResponseDto> getAll() throws SQLException;
 }

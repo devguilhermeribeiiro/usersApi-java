@@ -16,5 +16,5 @@ public interface RepositoryInterface {
 
     UserResponseDto edit(User user) throws SQLException;
 
-    UserResponseDto destroy(UUID id) throws Exception;
+    UserResponseDto destroy(UUID id) throws SQLException;
 }
