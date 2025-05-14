@@ -10,15 +10,13 @@ public class User {
     private final String name;
     private final String email;
 
-    public User(@NotNull String name, @NotNull String email) {
-        this.id = UUID.randomUUID();
+    public User(UUID id, @NotNull String name, @NotNull String email) {
+        this.id = (id != null) ? id : UUID.randomUUID();
         this.name = name;
         this.email = email;
     }
 
-    public UUID getId() {
-        return id;
-    }
+    public UUID getId() { return id; }
 
     public String getName() {
         return name;
