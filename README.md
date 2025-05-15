@@ -86,7 +86,7 @@ docker run --name usersApi-database \
 - Crie a tabela de usuários:
 
 ```bash
-docker exec -u usersApi usersApi-database \
+docker exec usersApi-database \
 psql -U usersApi -d usersApi \
 -c "CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY,
