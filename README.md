@@ -65,10 +65,45 @@ Para rodar a aplicação, tudo o que você precisa é do Docker instalado. A ima
 ### Passos:
 
 1. Certifique-se de que o Docker está instalado em sua máquina.
-2. Execute o seguinte comando para subir a aplicação:
+
+2. Crie uma nova rede para poder conectar-se ao banco de dados
+
+```bash 
+docker network create app-network
+```
+
+3. Rode um novo container com Postgres(Ou outro do seu gosto)
+```bash
+docker run --name usersApi-database \
+  --network app-network \
+  -e POSTGRES_PASSWORD=usersApi \
+  -e POSTGRES_USER=usersApi \
+  -e POSTGRES_DB=usersApi \
+  -p 5432:5432 \
+  -v pg_data:/var/lib/postgresql/data \
+  -d postgres:16-alpine
+```
+- Crie a tabela de usuários:
 
 ```bash
-docker run -p 8080:8080 devguilhermeribeiiro/users-api-java
+docker exec -u usersApi usersApi-database \
+psql -U usersApi -d usersApi \
+-c "CREATE TABLE IF NOT EXISTS users (
+    id UUID PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL
+);
+"
+
+```
+
+4. Execute o seguinte comando para subir a aplicação:
+
+```bash
+docker run --name users-api \
+-p 3000:3000 \
+--network app-network \
+devguilhermeribeiiro/users-api-java
 ```
 
 > Isso irá puxar a imagem da API do Docker Hub e expô-la na porta `8080`.
@@ -82,14 +117,6 @@ A API expõe os seguintes endpoints:
 - `POST /users`: Cria um novo usuário.
 - `PUT /users/{uuid}`: Atualiza um usuário existente.
 - `DELETE /users/{uuid}`: Remove um usuário.
-
-## 🧪 Testes
-
-Os testes podem ser executados com:
-
-```bash
-./gradlew test
-```
 
 ## 📄 Licença
 
